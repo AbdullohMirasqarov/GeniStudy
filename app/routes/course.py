@@ -238,7 +238,7 @@ def create_course_to_db(
 
 
 @router.get("/", response_model=list[CourseOut])
-def get_all_courses(db: Session = Depends(get_db)):
+def get_all_courses_only_for_admins(db: Session = Depends(get_db)):
     return db.query(Course).all()
 
 
