@@ -43,9 +43,9 @@ def register(data: StudentCreate, db: Session = Depends(get_db)):
         db.add(verification)
 
     db.commit()
-    send_verification_email(data.email, code)
+    # send_verification_email(data.email, code)
     print(f"Verification code sent to {data.email}: {code}")  # For debugging purposes
-    return {"message": "Verification code sent to email"}
+    return {"message": f"Verification code sent to {code}"}
 
 @router.post("/verify")
 def verify_code(data: CodeVerify, db: Session = Depends(get_db)):

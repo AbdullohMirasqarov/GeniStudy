@@ -42,10 +42,10 @@ def register_teacher(data: TeacherRegister, db: Session = Depends(get_db)):
     db.commit()
 
     # Email yuborish
-    send_verification_email(data.email, code)
+    # send_verification_email(data.email, code)
     print(f"Verification code sent to {data.email}: {code}")
 
-    return {"message": "Tasdiqlash kodingiz emailga yuborildi!"}
+    return {"message": f"Tasdiqlash kodingiz emailga yuborildi: {code}"}
 
 @router.post("/verify")
 def verify_teacher(data: TeacherVerify, db: Session = Depends(get_db)):
