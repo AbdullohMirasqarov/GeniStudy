@@ -10,10 +10,9 @@ app = FastAPI(
     description="GeniStudy is a comprehensive platform designed to facilitate online learning and teaching. It provides a range of features for students, teachers, and administrators to manage courses, track progress, and enhance the learning experience.",
     version="1.0.0"
 )
-
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "https://genistudy.vercel.app"],
+    allow_origins=["http://localhost:3000", "http://127.0.0.1:3000", "http://127.0.0.1:5533"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
