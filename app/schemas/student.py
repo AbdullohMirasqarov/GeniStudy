@@ -23,7 +23,7 @@ class StudentOut(BaseModel):
     full_name: str
     username: str
     email: str
-    phone_number: str
+    # phone_number: str
 
     model_config = {
         "from_attributes": True
