@@ -5,7 +5,7 @@ from app.core.config import SECRET_KEY, ALGORITHM
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
-ACCESS_TOKEN_EXPIRE_MINUTES = 15
+ACCESS_TOKEN_EXPIRE_MINUTES = 30
 REFRESH_TOKEN_EXPIRE_DAYS = 7
 
 def hash_password(password: str) -> str:

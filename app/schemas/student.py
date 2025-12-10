@@ -28,3 +28,14 @@ class StudentOut(BaseModel):
     model_config = {
         "from_attributes": True
     } 
+
+
+class StudentUpdate(BaseModel):
+    full_name: str | None = None
+    username: str | None = None
+    email: EmailStr | None = None
+    phone_number: str | None = None
+
+    model_config = {
+        "from_attributes": True
+    }    

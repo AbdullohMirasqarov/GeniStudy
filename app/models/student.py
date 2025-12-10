@@ -13,4 +13,5 @@ class Student(Base):
     email = Column(String, unique=True, index=True)
     phone_number = Column(String, nullable=True)
     hashed_password = Column(String)
+    avatar = Column(String, nullable=True, default="https://www.shareicon.net/data/2015/10/05/651573_man_512x512.png")
     ratings = relationship("Rating", back_populates="student", cascade="all, delete")
