@@ -17,23 +17,23 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/student/login")  # yoki teac
 def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        email = payload.get("sub")   # Token ichida email saqlangan bo‘lsa
+        username = payload.get("sub")   # Token ichida email saqlangan bo‘lsa
         role = payload.get("role")
 
-        if not email or not role:
-            raise HTTPException(status_code=401, detail="Token ichida email yoki role yo‘q.")
+        if not username or not role:
+            raise HTTPException(status_code=401, detail="Token ichida username yoki role yo‘q.")
 
         if role == "student":
-            user = db.query(Student).filter(Student.username == email).first()
+            user = db.query(Student).filter(Student.username == username).first()
         elif role == "teacher":
-            user = db.query(Teacher).filter(Teacher.email == email).first()
+            user = db.query(Teacher).filter(Teacher.username == username).first()
         elif role == "admin":
-            user = db.query(Admin).filter(Admin.email == email).first()
+            user = db.query(Admin).filter(Admin.username == username).first()
         else:
             raise HTTPException(status_code=403, detail="Noma'lum rol.")
 
         if user is None:
-            raise HTTPException(status_code=404, detail=f"{role} topilmadi: {email}")
+            raise HTTPException(status_code=404, detail=f"{role} topilmadi: {username}")
 
         user.role = role  # Role ham saqlab qo‘yilsa yaxshi (modelga bog‘lanmagan, shunchaki obyekt atributi)
         return user
@@ -101,18 +101,18 @@ def get_current_user_optional(
     token = credentials.credentials
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        email = payload.get("sub")
+        username = payload.get("sub")
         role = payload.get("role")
 
-        if not email or not role:
+        if not username or not role:
             return None  # Token noto‘g‘ri, login bo‘lmagan deb hisoblaymiz
 
         if role == "student":
-            user = db.query(Student).filter(Student.username == email).first()
+            user = db.query(Student).filter(Student.username == username).first()
         elif role == "teacher":
-            user = db.query(Teacher).filter(Teacher.email == email).first()
+            user = db.query(Teacher).filter(Teacher.username == username).first()
         elif role == "admin":
-            user = db.query(Admin).filter(Admin.email == email).first()
+            user = db.query(Admin).filter(Admin.username == username).first()
         else:
             return None  # Noma’lum role → login bo‘lmagan deb
 

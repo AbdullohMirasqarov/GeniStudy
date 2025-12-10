@@ -89,8 +89,8 @@ def login_teacher(data: TeacherLogin, db: Session = Depends(get_db)):
     if not verify_password(data.password, teacher.hashed_password):
         raise HTTPException(status_code=401, detail="Parol noto‘g‘ri.")
 
-    access_token = create_access_token(data={"sub": teacher.email, "role": "teacher"})
-    refresh_token = create_refresh_token(data={"sub": teacher.email})
+    access_token = create_access_token(data={"sub": teacher.username, "role": "teacher"})
+    refresh_token = create_refresh_token(data={"sub": teacher.username})
 
     return {
         "access_token": access_token,

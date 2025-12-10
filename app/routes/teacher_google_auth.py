@@ -87,8 +87,8 @@ def google_callback(request: Request, db: Session = Depends(get_db)):
         db.refresh(teacher)
 
     # JWT token yaratish
-    access_token_jwt = create_access_token({"sub": teacher.email, "role": "teacher"})
-    refresh_token_jwt = create_refresh_token({"sub": teacher.email, "role": "teacher"})
+    access_token_jwt = create_access_token({"sub": teacher.username, "role": "teacher"})
+    refresh_token_jwt = create_refresh_token({"sub": teacher.username, "role": "teacher"})
 
     return {
         "message": "Google login successful",

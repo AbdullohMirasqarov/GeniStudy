@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from .database import Base, engine
-from app.routes import check_token, student_auth, teacher_auth, student_dashboard, course, teacher_dashboard, admin_auth, rating, student_google_auth, teacher_google_auth, payment, category, student_edit
+from app.routes import check_token, student_auth, teacher_auth, student_dashboard, course, teacher_dashboard, admin_auth, rating, student_google_auth, teacher_google_auth, payment, category, student_edit, get_me
 from fastapi.middleware.cors import CORSMiddleware
 
 Base.metadata.create_all(bind=engine)
@@ -25,6 +25,8 @@ app.include_router(course.router)
 app.include_router(category.router, tags=["Categories"])
 
 app.include_router(check_token.router, tags=["Token Validation"])
+app.include_router(get_me.router)
+
 
 app.include_router(student_dashboard.router, prefix="/dashboard/student", tags=["Student Dashboard"])
 # app.include_router(student_edit.router, prefix="/student/profile", tags=["Student Profile"])
