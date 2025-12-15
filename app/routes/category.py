@@ -107,3 +107,16 @@ def create_subcategory(
     db.commit()
     db.refresh(sub)
     return sub
+
+
+@router.get("/subcategory/{subcategory_id}")
+def get_subcategory(subcategory_id: UUID, db: Session = Depends(get_db)):
+    sub = db.query(CourseSubCategory).filter(CourseSubCategory.id == subcategory_id).first()
+    if not sub:
+        raise HTTPException(404, "Subcategory topilmadi")
+    return sub
+
+@router.get("/subcategory/")
+def get_subcategories(db: Session = Depends(get_db)):
+    subs = db.query(CourseSubCategory).order_by(CourseSubCategory.name).all()
+    return subs
