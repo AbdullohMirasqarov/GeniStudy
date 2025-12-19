@@ -12,7 +12,7 @@ app = FastAPI(
 )
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "http://127.0.0.1:3000", "http://127.0.0.1:5533"],
+    allow_origins=["http://localhost:3000", "http://127.0.0.1:3000", "http://127.0.0.1:5533", "https://geni-study.vercel.app"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
