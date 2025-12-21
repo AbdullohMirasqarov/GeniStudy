@@ -46,5 +46,5 @@ class Course(Base):
     teacher = relationship("Teacher", back_populates="courses")
 
     videos = relationship("Video", back_populates="course", cascade="all, delete")
-    rating = relationship("Rating", back_populates="course", cascade="all, delete")
+    ratings = relationship("Rating", back_populates="course", cascade="all, delete")
     image_url = Column(String)

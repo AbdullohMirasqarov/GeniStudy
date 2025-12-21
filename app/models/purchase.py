@@ -18,7 +18,7 @@ class Purchase(Base):
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     student_id = Column(UUID(as_uuid=True), ForeignKey("students.id"))
-    course_id = Column(UUID(as_uuid=True), ForeignKey("courses.id"))
+    course_id = Column(UUID(as_uuid=True), ForeignKey("courses.id", ondelete="CASCADE"))
     amount = Column(Integer)  # so'mda
     status = Column(Enum(PaymentStatus), default=PaymentStatus.pending)
     created_at = Column(DateTime, default=datetime.utcnow)

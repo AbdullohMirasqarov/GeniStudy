@@ -13,6 +13,6 @@ class Video(Base):
     title = Column(String)
     order = Column(Integer)
     video_url = Column(String, nullable=True)  # <-- Shunaqa bo'lishi kerak
-    course_id = Column(UUID(as_uuid=True), ForeignKey("courses.id"))
+    course_id = Column(UUID(as_uuid=True), ForeignKey("courses.id", ondelete="CASCADE"))
 
     course = relationship("Course", back_populates="videos")

@@ -232,14 +232,15 @@ def create_course_to_db(
 
     db.commit()
 
-    return {"message": "Kurs muvaffaqiyatli yaratildi!", "course_id": course.id}
+    return {"message": "Kurs muvaffaqiyatli yaratildi!", "course_id": course.id, "name": course.name, "description": course.description, "price": course.price, "image_url": course.image_url, "category_id": course.category_id, "subcategory_id": course.subcategory_id}
+    # return course
 
 
 
 
-@router.get("/", response_model=list[CourseOut])
-def get_all_courses_only_for_admins(db: Session = Depends(get_db)):
-    return db.query(Course).all()
+# @router.get("/", response_model=list[CourseOut])
+# def get_all_courses_only_for_admins(db: Session = Depends(get_db)):
+#     return db.query(Course).all()
 
 
 @router.get("/preview", response_model=list[CoursePreview])
@@ -342,23 +343,89 @@ def get_course(
 
 
 
-@router.put("/{course_id}", response_model=CourseOut)
-def update_course(course_id: str, data: CourseUpdate, db: Session = Depends(get_db), current_user=Depends(get_current_user)):
+# @router.put("/{course_id}", response_model=CourseOut)
+# def update_course(course_id: str, data: CourseUpdate, db: Session = Depends(get_db), current_user=Depends(get_current_user)):
+#     course = db.query(Course).filter(Course.id == course_id).first()
+#     if not course:
+#         raise HTTPException(status_code=404, detail="Kurs topilmadi.")
+
+#     teacher = db.query(Teacher).filter(Teacher.email == current_user.email).first()
+
+#     if not teacher or course.teacher_id != teacher.id:
+#         raise HTTPException(status_code=403, detail="Faqat o'z kursingizni tahrirlash mumkin.")
+
+#     for key, value in data.dict(exclude_unset=True).items():
+#         setattr(course, key, value)
+
+#     db.commit()
+#     db.refresh(course)
+#     return course
+
+
+
+@router.put("/{course_id}")
+def update_course(
+    course_id: UUID,
+
+    name: str = Form(...),
+    description: str = Form(""),
+    price: int = Form(...),
+
+    category_id: UUID = Form(...),
+    subcategory_id: Optional[UUID] = Form(None),
+
+    photo: UploadFile | None = File(None),  # MUHIM: majburiy emas
+
+    db: Session = Depends(get_db),
+    current_user=Depends(get_current_user),
+):
+    # 1. Kursni topish
     course = db.query(Course).filter(Course.id == course_id).first()
     if not course:
         raise HTTPException(status_code=404, detail="Kurs topilmadi.")
 
+    # 2. Teacher tekshiruv
     teacher = db.query(Teacher).filter(Teacher.email == current_user.email).first()
-
     if not teacher or course.teacher_id != teacher.id:
         raise HTTPException(status_code=403, detail="Faqat o'z kursingizni tahrirlash mumkin.")
 
-    for key, value in data.dict(exclude_unset=True).items():
-        setattr(course, key, value)
+    # 3. Category tekshiruv
+    category = db.query(CourseCategory).filter(CourseCategory.id == category_id).first()
+    if not category:
+        raise HTTPException(status_code=404, detail="Category topilmadi.")
+
+    if subcategory_id:
+        subcat = db.query(CourseSubCategory).filter(
+            CourseSubCategory.id == subcategory_id,
+            CourseSubCategory.category_id == category_id
+        ).first()
+        if not subcat:
+            raise HTTPException(400, "Subcategory shu kategoriyaga tegishli emas")
+
+    # 4. Rasm kelsa → Cloudinary ga yuklash
+    if photo:
+        try:
+            image_result = cloudinary.uploader.upload(
+                photo.file,
+                folder="courses/images"
+            )
+            course.image_url = image_result["secure_url"]
+        except Exception as e:
+            raise HTTPException(500, f"Rasm yuklashda xatolik: {str(e)}")
+
+    # 5. Qolgan fieldlarni yangilash
+    course.name = name
+    course.description = description
+    course.price = price
+    course.category_id = category_id
+    course.subcategory_id = subcategory_id
 
     db.commit()
     db.refresh(course)
-    return course
+    # return course
+    return {"message": "Kurs muvaffaqiyatli yangilandi!", "course_id": course.id, "name": course.name, "description": course.description, "price": course.price, "image_url": course.image_url, "category_id": course.category_id, "subcategory_id": course.subcategory_id}
+
+
 
 
 # @router.delete("/{course_id}")
