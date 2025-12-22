@@ -34,8 +34,8 @@ def login_admin(username: str, password: str, db: Session = Depends(get_db)):
     if not admin or not verify_password(password, admin.hashed_password):
         raise HTTPException(status_code=401, detail="Login yoki parol noto‘g‘ri")
 
-    access_token = create_access_token(data={"sub": admin.email, "role": "admin"})
-    refresh_token = create_refresh_token(data={"sub": admin.email})
+    access_token = create_access_token(data={"sub": admin.username, "role": "admin"})
+    refresh_token = create_refresh_token(data={"sub": admin.username})
     return {
         "access_token": access_token,
         "refresh_token": refresh_token,
