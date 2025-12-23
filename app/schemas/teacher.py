@@ -27,7 +27,7 @@ class TeacherOut(BaseModel):
     fullname: str
     username: str
     email: str
-    phone_number: str
+    phone_number: Optional[str]
     bio: Optional[str]
     avatar: Optional[str]
 

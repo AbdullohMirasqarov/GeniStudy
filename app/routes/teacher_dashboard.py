@@ -17,7 +17,8 @@ def get_all_teachers(
     db: Session = Depends(get_db),
     current_user=Depends(require_admin)
 ):
-    return db.query(Teacher).all()
+    teachers = db.query(Teacher).all()
+    return [t.__dict__ for t in teachers] 
 
 
 @router.get("/by-username/{username}", response_model=TeacherOut)
